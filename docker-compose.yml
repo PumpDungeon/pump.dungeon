@@ -34,18 +34,24 @@ services:
     #   - front-service
 
   dungeon-service:
-    build: ./dungeon-service
+    image: node:alpine
+    volumes:
+      - ./dungeon-service:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
     ports:
       - "3000:3000"
     environment:
       - PORT=3000
-    depends_on:
-      - game-service
     networks:
       - app-net
 
   fight-service:
-    build: ./fight-service
+    image: node:alpine
+    volumes:
+      - ./fight-service:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
     ports:
       - "3001:3001"
     environment:
@@ -67,7 +73,11 @@ services:
       - app-net
 
   player-service:
-    build: ./player-service
+    image: node:alpine
+    volumes:
+      - ./player-service:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
     ports:
       - "3002:3002"
     environment:
@@ -89,13 +99,15 @@ services:
       - app-net
 
   game-service:
-    build: ./game-service
+    image: node:alpine
+    volumes:
+      - ./game-service:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
     ports:
       - "3003:3003"
     environment:
       - MONGO_URL=mongodb://game-db:27017/game
-    volumes:
-      - ./game-service:/usr/src/app
     depends_on:
       - game-db
     networks:
@@ -112,7 +124,11 @@ services:
       - app-net
 
   front-service:
-    build: ./front-service
+    image: node:alpine
+    volumes:
+      - ./front-service:/usr/src/app
+    working_dir: /usr/src/app
+    command: npm start
     ports:
       - "3004:3004"
     depends_on:

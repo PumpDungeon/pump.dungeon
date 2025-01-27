@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-git submodule update --init --recursive
+git submodule update --init --recursive --remote
 docker compose up -d
 ```
 
