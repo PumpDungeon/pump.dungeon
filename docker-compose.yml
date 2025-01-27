@@ -1,0 +1,130 @@
+services:
+  kong:
+    image: kong/kong-gateway
+    environment:
+      KONG_DATABASE: "off"
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_ADMIN_GUI_URL: http://localhost:8002
+      KONG_LICENSE_DATA:
+      # KONG_ADMIN_API_URI: http://localhost:8001
+      # KONG_PORTAL_GUI_HOST: localhost:8003
+      # KONG_PORTAL: "on"
+    ports:
+      - "8000:8000"  # Public HTTP
+      - "8443:8443"  # Public HTTPS
+      - "8001:8001"  # Admin API HTTP
+      - "8444:8444"  # Admin API HTTPS
+      - "8002:8002"  # Kong Manager
+      - "8445:8445"  # Kong Manager HTTPS
+      - "8003:8003"  # Dev Portal
+      - "8004:8004"  # Dev Portal HTTPS
+    volumes:
+      - ./game-service/kong.yml:/kong/declarative/kong.yml
+    networks:
+      - kong-net
+      - app-net
+    # depends_on:
+    #   - dungeon-service
+    #   - fight-service
+    #   - player-service
+    #   - front-service
+
+  dungeon-service:
+    build: ./dungeon-service
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    depends_on:
+      - game-service
+    networks:
+      - app-net
+
+  fight-service:
+    build: ./fight-service
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGO_URL=mongodb://fight-db:27017/fight
+    depends_on:
+      - fight-db
+      - game-service
+    networks:
+      - app-net
+
+  fight-db:
+    image: mongo:latest
+    container_name: fight-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - fight-db-data:/data/db
+    networks:
+      - app-net
+
+  player-service:
+    build: ./player-service
+    ports:
+      - "3002:3002"
+    environment:
+      - MONGO_URL=mongodb://player-db:27017/player
+    depends_on:
+      - player-db
+      - game-service
+    networks:
+      - app-net
+
+  player-db:
+    image: mongo:latest
+    container_name: player-db
+    ports:
+      - "27019:27017"
+    volumes:
+      - player-db-data:/data/db
+    networks:
+      - app-net
+
+  game-service:
+    build: ./game-service
+    ports:
+      - "3003:3003"
+    environment:
+      - MONGO_URL=mongodb://game-db:27017/game
+    volumes:
+      - ./game-service:/usr/src/app
+    depends_on:
+      - game-db
+    networks:
+      - app-net
+
+  game-db:
+    image: mongo:latest
+    container_name: game-db
+    ports:
+      - "27020:27017"
+    volumes:
+      - game-db-data:/data/db
+    networks:
+      - app-net
+
+  front-service:
+    build: ./front-service
+    ports:
+      - "3004:3004"
+    depends_on:
+      - game-service
+    networks:
+      - app-net
+
+networks:
+  kong-net:
+  app-net:
+
+volumes:
+  fight-db-data:
+  player-db-data:
+  game-db-data:

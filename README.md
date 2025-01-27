@@ -1,6 +1,12 @@
 # Pump Dungeon
 
-git submodule add https://github.com/PumpDungeon/dungeon-service
+## Installation
 
-git commit -am "Added submodules for dungeon service"
+```bash
+git submodule update --init --recursive
+docker compose up -d
+```
 
+## How it works
+INSERT DRAWIO DIAGRAM
+![Diagram](https://i.imgur.com/)
