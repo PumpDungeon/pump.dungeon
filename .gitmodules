@@ -1,0 +1,15 @@
+[submodule "front-service"]
+	path = front-service
+	url = https://github.com/PumpDungeon/front-service
+[submodule "game-service"]
+	path = game-service
+	url = https://github.com/PumpDungeon/game-service
+[submodule "player-service"]
+	path = player-service
+	url = https://github.com/PumpDungeon/player-service
+[submodule "fight-service"]
+	path = fight-service
+	url = https://github.com/PumpDungeon/fight-service
+[submodule "dungeon-service"]
+	path = dungeon-service
+	url = https://github.com/PumpDungeon/dungeon-service
