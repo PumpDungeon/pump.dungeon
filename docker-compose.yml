@@ -18,8 +18,6 @@ services:
     command: sh -c "npm install && npm start"
     ports:
       - "3001:3000"
-    depends_on:
-      - game-service
 
   player-service:
     image: node:alpine
@@ -33,7 +31,6 @@ services:
       - MONGO_URL=mongodb://player-db:27017/player
     depends_on:
       - player-db
-      - game-service
 
   player-db:
     image: mongo:latest
@@ -50,6 +47,10 @@ services:
     command: sh -c "npm install && npm start"
     ports:
       - "3003:3000"
+    depends_on:
+      - dungeon-service
+      - fight-service
+      - player-service
 
   front-service:
     image: node:alpine
@@ -59,8 +60,6 @@ services:
     command: sh -c "npm install && npm start"
     ports:
       - "3004:3000"
-    depends_on:
-      - game-service
 
 volumes:
   player-db-data:
