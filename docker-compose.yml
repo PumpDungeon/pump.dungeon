@@ -7,8 +7,6 @@ services:
     command: sh -c "npm install && npm start"
     ports:
       - "3000:3000"
-    environment:
-      - PORT=3000
 
   fight-service:
     image: node:alpine
@@ -17,7 +15,7 @@ services:
     working_dir: /usr/src/app
     command: sh -c "npm install && npm start"
     ports:
-      - "3001:3000"
+      - "3001:3001"
 
   player-service:
     image: node:alpine
@@ -26,7 +24,7 @@ services:
     working_dir: /usr/src/app
     command: sh -c "npm install && npm start"
     ports:
-      - "3002:3000"
+      - "3002:3002"
     environment:
       - MONGO_URL=mongodb://player-db:27017/player
     depends_on:
