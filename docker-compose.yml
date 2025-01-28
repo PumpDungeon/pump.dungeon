@@ -17,8 +17,11 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - rabbitmq
-
+      rabbitmq:
+        condition: service_healthy
+      player-service:
+        condition: service_started
+      
   player-service:
     image: node:alpine
     volumes:
@@ -30,8 +33,10 @@ services:
     environment:
       - MONGO_URL=mongodb://player-db:27017
     depends_on:
-      - player-db
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      player-db:
+        condition: service_started
 
   player-db:
     image: mongo:latest
@@ -44,6 +49,10 @@ services:
     build: ./front-service
     ports:
       - "80:80"
+    depends_on:
+      - dungeon-service
+      - fight-service
+      - player-service
 
   rabbitmq:
     image: rabbitmq:4-management-alpine
@@ -52,9 +61,11 @@ services:
       - "15672:15672"  # RabbitMQ management UI
     volumes:
       - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-    depends_on:
-      - front-service
-      - dungeon-service
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 2s
+      timeout: 2s
+      retries: 10
 
 volumes:
   player-db-data:
