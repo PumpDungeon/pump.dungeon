@@ -39,27 +39,24 @@ services:
     volumes:
       - player-db-data:/data/db
 
-  game-service:
-    image: node:alpine
-    volumes:
-      - ./game-service:/usr/src/app
-    working_dir: /usr/src/app
-    command: sh -c "npm install && npm start"
+  front-service:
+    build: ./front-service
     ports:
-      - "3003:3000"
+      - "80:80"
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    ports:
+      - "5672:5672"  # RabbitMQ main port
+      - "15672:15672"  # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
     depends_on:
+      - front-service
       - dungeon-service
       - fight-service
       - player-service
-
-  front-service:
-    image: node:alpine
-    volumes:
-      - ./front-service:/usr/src/app
-    working_dir: /usr/src/app
-    command: sh -c "npm install && npm start"
-    ports:
-      - "3004:3000"
 
 volumes:
   player-db-data:
