@@ -16,6 +16,8 @@ services:
     command: sh -c "npm install && npm start"
     ports:
       - "3001:3001"
+    depends_on:
+      - rabbitmq
 
   player-service:
     image: node:alpine
@@ -26,9 +28,10 @@ services:
     ports:
       - "3002:3002"
     environment:
-      - MONGO_URL=mongodb://player-db:27017/player
+      - MONGO_URL=mongodb://player-db:27017
     depends_on:
       - player-db
+      - rabbitmq
 
   player-db:
     image: mongo:latest
@@ -47,14 +50,9 @@ services:
     ports:
       - "5672:5672"  # RabbitMQ main port
       - "15672:15672"  # RabbitMQ management UI
-    environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
     depends_on:
       - front-service
       - dungeon-service
-      - fight-service
-      - player-service
 
 volumes:
   player-db-data:
