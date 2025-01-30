@@ -46,6 +46,8 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=playerDB
     volumes:
       - player-db-data:/data/db
 
