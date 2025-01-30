@@ -12,5 +12,4 @@ docker compose up -d
 You can now access the website at [http://localhost](http://localhost)
 
 ## How it works
-INSERT DRAWIO DIAGRAM
-![Diagram](https://i.imgur.com/)
+![Diagram](https://i.imgur.com/DhUdR1z.png)
