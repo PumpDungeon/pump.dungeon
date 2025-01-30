@@ -34,7 +34,7 @@ services:
     ports:
       - "3002:3002"
     environment:
-      - MONGO_URL=mongodb://player-db:27017
+      - MONGO_URL=mongodb://player-db:27017/playerDB
       - RABBITMQ_HOST=rabbitmq:5672
     depends_on:
       rabbitmq:
