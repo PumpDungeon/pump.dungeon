@@ -46,10 +46,9 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
-    environment:
-      - MONGO_INITDB_DATABASE=playerDB
     volumes:
       - player-db-data:/data/db
+      - ./player-service/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   front-service:
     build: ./front-service
